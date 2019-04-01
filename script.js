@@ -189,14 +189,17 @@ function virtualKeyboardChromeExtension_click(key, skip) {
 						}
 					}, 500);
 					if (virtualKeyboardChromeExtensionFullScreenState && intelligentScroll) {
-						var scrollYAmount = document.documentElement.scrollTop;
-						if ((scrollYAmount <= virtualKeyboardChromeExtensionStateNewPos + 50) && (scrollYAmount >= virtualKeyboardChromeExtensionStateNewPos - 50)) {
-							document.getElementById("virtualKeyboardChromeExtensionOverlayScrollExtend").style.display = "none";
-							if (virtualKeyboardChromeExtensionPagePadding) {
-								document.body.style.marginBottom = "";
-							}
-							window.scroll(0, virtualKeyboardChromeExtensionStateLastPos);
+						var scrollYAmount = window.pageYOffset;
+						/* not sure what the purpose of this if statement is but if overflow
+						is hidden then window.pageYOffset ignores the hidden content and
+						fails to reposition properly. */
+						// if ((scrollYAmount <= virtualKeyboardChromeExtensionStateNewPos + 50) && (scrollYAmount >= virtualKeyboardChromeExtensionStateNewPos - 50)) {
+						document.getElementById("virtualKeyboardChromeExtensionOverlayScrollExtend").style.display = "none";
+						if (virtualKeyboardChromeExtensionPagePadding) {
+							document.body.style.marginBottom = "";
 						}
+						window.scroll(0, virtualKeyboardChromeExtensionStateLastPos);
+						//}
 					}
 				}
 				document.getElementById("virtualKeyboardChromeExtensionOverlayDemand").setAttribute("_state", "close");
@@ -239,14 +242,17 @@ function virtualKeyboardChromeExtension_click(key, skip) {
 						document.getElementById('virtualKeyboardChromeExtension').setAttribute("_state", "closed");
 						setTimeout(function () { document.getElementById('virtualKeyboardChromeExtension').style.display = "none"; }, 500);
 						if (virtualKeyboardChromeExtensionFullScreenState && intelligentScroll) {
-							var scrollYAmount = document.documentElement.scrollTop;
-							if ((scrollYAmount <= virtualKeyboardChromeExtensionStateNewPos + 50) && (scrollYAmount >= virtualKeyboardChromeExtensionStateNewPos - 50)) {
-								document.getElementById("virtualKeyboardChromeExtensionOverlayScrollExtend").style.display = "none";
-								if (virtualKeyboardChromeExtensionPagePadding) {
-									document.body.style.marginBottom = "";
-								}
-								window.scroll(0, virtualKeyboardChromeExtensionStateLastPos);
+							var scrollYAmount = window.pageYOffset;
+							//if ((scrollYAmount <= virtualKeyboardChromeExtensionStateNewPos + 50) && (scrollYAmount >= virtualKeyboardChromeExtensionStateNewPos - 50)) {
+							/* not sure what the purpose of this if statement is but if overflow
+							is hidden then window.pageYOffset ignores the hidden content and
+							fails to reposition properly. */
+							document.getElementById("virtualKeyboardChromeExtensionOverlayScrollExtend").style.display = "none";
+							if (virtualKeyboardChromeExtensionPagePadding) {
+								document.body.style.marginBottom = "";
 							}
+							window.scroll(0, virtualKeyboardChromeExtensionStateLastPos);
+							//}
 						}
 					}
 					virtualKeyboardChromeExtension_generate_onchange();
@@ -363,11 +369,11 @@ function virtualKeyboardChromeExtension_getElementPositionX(obj) {
 }
 
 function virtualKeyboardChromeExtension_open_part2(pos) {
-	var windowScrollTop = document.documentElement.scrollTop;
+	var windowScrollTop = window.pageYOffset;
 	if (virtualKeyboardChromeExtensionCloseTimer != null) {
 		clearTimeout(virtualKeyboardChromeExtensionCloseTimer);
 	}
-	virtualKeyboardChromeExtensionStateLastPos = document.documentElement.scrollTop;
+	virtualKeyboardChromeExtensionStateLastPos = window.pageYOffset;
 	if (virtualKeyboardChromeExtensionFullScreenState) {
 		if (((document.body.style.marginBottom == "") && (!virtualKeyboardChromeExtensionPagePadding)) || (virtualKeyboardChromeExtensionPagePadding)) {
 			document.body.style.marginBottom = document.getElementById("virtualKeyboardChromeExtension").offsetHeight + "px";
@@ -469,8 +475,8 @@ function virtualKeyboardChromeExtension_open(posY, posX, force) {
 			virtualKeyboardChromeExtensionClickedElemDemand = virtualKeyboardChromeExtensionClickedElem;
 			if (posX == undefined) { posX = virtualKeyboardChromeExtension_getElementPositionX(virtualKeyboardChromeExtensionClickedElem); }
 			if (posY == undefined) { posY = virtualKeyboardChromeExtension_getElementPositionY(virtualKeyboardChromeExtensionClickedElem); }
-			posX = posX + document.documentElement.scrollLeft;
-			posY = posY + document.documentElement.scrollTop;
+			posX = posX + window.pageXOffset;
+			posY = posY + window.pageYOffset;
 			document.getElementById("virtualKeyboardChromeExtensionOverlayDemand").style.display = "block";
 			document.getElementById("virtualKeyboardChromeExtensionOverlayDemand").style.top = posY + "px";
 			document.getElementById("virtualKeyboardChromeExtensionOverlayDemand").style.left = posX + "px";
